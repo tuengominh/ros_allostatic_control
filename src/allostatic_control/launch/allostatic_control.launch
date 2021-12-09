@@ -1,0 +1,13 @@
+<launch>
+    <node pkg="allostatic_control" type="StimuliDetector.py" name="stimuli_detector" />
+
+    <node pkg="allostatic_control" type="TemperatureGradient.py" name="temperature_controller" />
+    
+    <node pkg="allostatic_control" type="HomeostaticController.py" name="homeostatic_controller" />
+
+    <node pkg="allostatic_control" type="AllostaticController.py" name="allostatic_controller" />
+
+    <node pkg="allostatic_control" type="ActionSelector.py" name="action_selector" />
+
+    <node pkg="allostatic_control" type="MotorController.py" name="motor_controller" />
+</launch>

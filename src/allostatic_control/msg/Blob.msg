@@ -1,0 +1,9 @@
+bool Target
+float32 Target_x
+string Target_color
+bool R_obstacle
+bool L_obstacle
+float32 R_obstacle_dist
+float32 L_obstacle_dist
+float32 num_food
+float32 num_water

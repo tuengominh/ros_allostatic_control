@@ -1,0 +1,139 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="open_arena">
+
+
+    <material name="blue">
+        <color rgba="0 0 0.8 1"/>
+    </material>
+    <material name="black">
+        <color rgba="0 0 0 1"/>
+    </material>
+    <material name="white">
+        <color rgba="1 1 1 1"/>
+    </material>
+    <material name="red">
+        <color rgba="1.0 0.0 0.0 1.0"/>
+    </material>
+    <material name="green">
+        <color rgba="0.0 0.82 0.0 1"/>
+    </material>
+    <material name="grey">
+        <color rgba="0.8 0.8 0.8 1"/>
+    </material>
+    <material name="pink">
+        <color rgba="1.0 0.6 0.7 1"/>
+    </material>
+    <material name="orange">
+        <color rgba="0.8 0.4 0.0 1"/>
+    </material>
+    <material name="yellow">
+        <color rgba="0.9 0.9 0.0 1"/>
+    </material>
+    <material name="nocolor">
+        <color rgba="0.0 0.0 0.0 0"/>
+    </material>
+
+
+ <xacro:macro name="fixed" params="prefix  mesh material gazebo_material">
+        <link name="${prefix}_link">
+            <inertial>
+                <mass value="100"/>
+                <inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0"  izz="0.01"/>
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+            </inertial>
+            <visual>
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+                <geometry>
+                    <mesh filename="package://robot_description/meshes/arena/${mesh}" scale="0.001 0.001 0.001"/>
+                </geometry>
+                <material name="${material}"/>
+            </visual>
+            <collision>
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+                <geometry>
+                    <mesh filename="package://robot_description/meshes/arena/${mesh}" scale="0.001 0.001 0.001"/>
+                </geometry>
+            </collision>
+        </link>
+        <joint name="${prefix}_joint" type="fixed">
+            <parent link="base_footprint"/>
+            <child link="${prefix}_link"/>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        </joint>
+        <gazebo reference="${prefix}_link">
+            <material>${gazebo_material}</material>
+        </gazebo>
+    </xacro:macro>
+
+    <link name="base_footprint"/>
+
+    <!--<xacro:fixed prefix= "arena_floor" 
+    mesh= "arena_floor.stl"
+    material="grey"
+    gazebo_material="Gazebo/Grey"/>-->
+
+    <xacro:fixed prefix= "arena_wall_yellow" 
+    mesh= "arena_wall_yellow.stl"
+    material="white"
+    gazebo_material="Gazebo/White"/>
+
+    <xacro:fixed prefix= "arena_wall_blue" 
+    mesh= "arena_wall_blue.stl"
+    material="white"
+    gazebo_material="Gazebo/White"/>
+
+    <xacro:fixed prefix= "arena_wall_pink" 
+    mesh= "arena_wall_pink.stl"
+    material="white"
+    gazebo_material="Gazebo/White"/>
+
+    <xacro:fixed prefix= "arena_wall_white" 
+    mesh= "arena_wall_white.stl"
+    material="white"
+    gazebo_material="Gazebo/White"/>
+    
+    <!--########################## OBSTACLES #############################-->
+
+    <!--<xacro:fixed prefix= "cubo_blue" 
+    mesh= "cubo_blue.stl"
+    material="blue"
+    gazebo_material="Gazebo/Blue"/>
+
+    <xacro:fixed prefix= "cubo_green" 
+    mesh= "cubo_green.stl"
+    material="green"
+    gazebo_material="Gazebo/Green"/>
+    
+    <xacro:fixed prefix= "cubo_orange" 
+    mesh= "cubo_orange.stl"
+    material="orange"
+    gazebo_material="Gazebo/Orange"/>
+
+    <xacro:fixed prefix= "cubo_red" 
+    mesh= "cubo_red.stl"
+    material="red"
+    gazebo_material="Gazebo/Red"/>
+
+    <xacro:fixed prefix= "cubo_yellow" 
+    mesh= "cubo_yellow.stl"
+    material="yellow"
+    gazebo_material="Gazebo/Yellow"/>-->
+
+    <!--######################## ALLEYS #############################-->
+
+    <!--<xacro:fixed prefix= "box01" 
+    mesh= "box01.stl"
+    material="red"
+    gazebo_material="Gazebo/Red"/>
+    
+    <xacro:fixed prefix= "box02" 
+    mesh= "box02.stl"
+    material="red"
+    gazebo_material="Gazebo/Red"/>
+    
+    <xacro:fixed prefix= "box03b" 
+    mesh= "box03b.stl"
+    material="red"
+    gazebo_material="Gazebo/Red"/>-->
+
+</robot>

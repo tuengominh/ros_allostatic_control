@@ -1,0 +1,8 @@
+prefix=/home/roboticslab/Robotology/Repos/allostasis_ws/devel
+
+Name: allostasis_msg
+Description: Description of allostasis_msg
+Version: 0.0.0
+Cflags: -I/home/roboticslab/Robotology/Repos/allostasis_ws/devel/include
+Libs: -L${prefix}/lib 
+Requires: message_runtime
