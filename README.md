@@ -1,5 +1,3 @@
-# How to install the allostasis_ws repository.
-
 1. Create a folder named 'allostasis_ws' and clone this repository into that folder
 2. Source the workspace by entering the command 'source devel/setup.bash'
 3. Build the workspace by entering the command 'catkin_make -DPYTHON_EXECUTABLE=/usr/bin/python3'
