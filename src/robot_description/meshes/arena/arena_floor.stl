@@ -1,0 +1,86 @@
+solid arena
+facet normal -0.0 -1.0 -0.0
+  outer loop
+    vertex 2720.0000000000014 0.0 10.0
+    vertex 1.263344984181458e-12 0.0 0.0
+    vertex 2720.0000000000014 0.0 0.0
+  endloop
+endfacet
+facet normal -0.0 -1.0 -0.0
+  outer loop
+    vertex 1.263344984181458e-12 0.0 0.0
+    vertex 2720.0000000000014 0.0 10.0
+    vertex 1.263344984181458e-12 0.0 10.0
+  endloop
+endfacet
+facet normal 0.0 0.0 -1.0
+  outer loop
+    vertex 2720.0000000000014 2269.999999999997 0.0
+    vertex 1.263344984181458e-12 0.0 0.0
+    vertex 0.0 2269.9999999999977 0.0
+  endloop
+endfacet
+facet normal 0.0 0.0 -1.0
+  outer loop
+    vertex 1.263344984181458e-12 0.0 0.0
+    vertex 2720.0000000000014 2269.999999999997 0.0
+    vertex 2720.0000000000014 0.0 0.0
+  endloop
+endfacet
+facet normal -1.0 -5.565396406085724e-16 -0.0
+  outer loop
+    vertex 0.0 2269.9999999999977 10.0
+    vertex 1.263344984181458e-12 0.0 0.0
+    vertex 1.263344984181458e-12 0.0 10.0
+  endloop
+endfacet
+facet normal -1.0 -5.565396406085724e-16 -0.0
+  outer loop
+    vertex 1.263344984181458e-12 0.0 0.0
+    vertex 0.0 2269.9999999999977 10.0
+    vertex 0.0 2269.9999999999977 0.0
+  endloop
+endfacet
+facet normal 2.6540861012215493e-16 1.0 0.0
+  outer loop
+    vertex 0.0 2269.9999999999977 10.0
+    vertex 2720.0000000000014 2269.999999999997 0.0
+    vertex 0.0 2269.9999999999977 0.0
+  endloop
+endfacet
+facet normal 2.6540861012215493e-16 1.0 0.0
+  outer loop
+    vertex 2720.0000000000014 2269.999999999997 0.0
+    vertex 0.0 2269.9999999999977 10.0
+    vertex 2720.0000000000014 2269.999999999997 10.0
+  endloop
+endfacet
+facet normal 1.0 0.0 0.0
+  outer loop
+    vertex 2720.0000000000014 2269.999999999997 0.0
+    vertex 2720.0000000000014 0.0 10.0
+    vertex 2720.0000000000014 0.0 0.0
+  endloop
+endfacet
+facet normal 1.0 0.0 0.0
+  outer loop
+    vertex 2720.0000000000014 0.0 10.0
+    vertex 2720.0000000000014 2269.999999999997 0.0
+    vertex 2720.0000000000014 2269.999999999997 10.0
+  endloop
+endfacet
+facet normal 0.0 0.0 1.0
+  outer loop
+    vertex 1.263344984181458e-12 0.0 10.0
+    vertex 2720.0000000000014 2269.999999999997 10.0
+    vertex 0.0 2269.9999999999977 10.0
+  endloop
+endfacet
+facet normal 0.0 0.0 1.0
+  outer loop
+    vertex 2720.0000000000014 2269.999999999997 10.0
+    vertex 1.263344984181458e-12 0.0 10.0
+    vertex 2720.0000000000014 0.0 10.0
+  endloop
+endfacet
+endsolid arena

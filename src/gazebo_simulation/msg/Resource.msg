@@ -1,0 +1,2 @@
+string resource
+float32 impact

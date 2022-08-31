@@ -1,0 +1,31 @@
+<launch>
+    <!-- 
+        Launch file follows: 
+        http://gazebosim.org/tutorials?tut=ros_control#Createaroslaunchfile
+    -->
+
+    <!-- Load controller configurations from YAML file to parameter server -->
+    <rosparam command="load"
+        file="$(find allostatic_control)/config/test_control.yaml"/>
+
+    <!--rosparam command="load"
+        file="$(find allostatic_control)/config/pid.yaml"/-->
+
+    <!-- load the controllers -->
+    <node name="roseco_controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+        output="screen" ns="/roseco" 
+        args="joint_state_controller  roseco_mobile_base_controller"/>
+
+
+    <!-- convert joint states to TF transforms for rviz, etc -->
+    <!--node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" ></node-->  <!--Added-->
+    <node name="base_robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
+        ns="roseco" respawn="false" output="screen">
+        <remap from="/joint_states" to="/roseco/joint_states" />
+        <param name="publish_frequency" type="double" value="20.0" />
+    </node>
+
+    <!--node name="roseco_robot_steering" pkg="rqt_robot_steering" type="rqt_robot_steering">
+        <param name="default_topic" value="/roseco/roseco_mobile_base_controller/cmd_vel"/>
+    </node-->
+</launch>

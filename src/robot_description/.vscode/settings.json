@@ -1,0 +1,10 @@
+{
+    "ros.distro": "noetic",
+    "python.autoComplete.extraPaths": [
+        "/home/aescuredo/rosarm_ws/devel/lib/python3/dist-packages",
+        "/home/aescuredo/turtlebot3_ws/devel/lib/python3/dist-packages",
+        "/home/aescuredo/hrrecycler_ws/devel/lib/python3/dist-packages",
+        "/home/aescuredo/catkin_ws/devel/lib/python3/dist-packages",
+        "/opt/ros/noetic/lib/python3/dist-packages"
+    ]
+}
