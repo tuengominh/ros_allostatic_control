@@ -13,7 +13,6 @@ Target_x = 0
 Target_color = ""
 num_food = 0
 num_water = 0
-pred_color = "red"
 food_color = "green"
 water_color = "blue"
 
@@ -26,7 +25,6 @@ obs_dist_th = 0.4
 blob_list = []
 visualize_blob = False 
 debug = False 
-
 next_t = 1000
 time_init = time.time()
 
@@ -107,36 +105,35 @@ class StimuliDetector:
         L_obstacle = False
         R_obstacle_dist = 1000
         L_obstacle_dist = 1000
-        R_obstacle_pos = 0
-        L_obstacle_pos = 0
+        #R_obstacle_pos = 0
+        #L_obstacle_pos = 0
         lidar_data = ros_data.ranges
 
         for i in range (45):
             # Detect first R obstacle
             if lidar_data[i+135] < obs_dist_th and R_obstacle == False: 
                 R_obstacle_dist = lidar_data[i+135]
-                R_obstacle_pos = i + 135
+                #R_obstacle_pos = i + 135
                 R_obstacle = True
             # Detect first L obstacle
             if lidar_data[i+180] < obs_dist_th and L_obstacle == False: 
                 L_obstacle_dist = lidar_data[i+180]
-                L_obstacle_pos = i + 180
+                #L_obstacle_pos = i + 180
                 L_obstacle = True
             # Update R obstacle
             if lidar_data[i] < R_obstacle_dist and R_obstacle == True: 
                 R_obstacle_dist = lidar_data[i]
-                R_obstacle_pos = i
+                #R_obstacle_pos = i
             # Update L obstacle
             if lidar_data[i] < L_obstacle_dist and L_obstacle == True: 
                 L_obstacle_dist = lidar_data[i+180]
-                L_obstacle_pos = i + 180
+                #L_obstacle_pos = i + 180
 
         self.findTarget() 
         self.publishMsg(Target, Target_x, Target_color, R_obstacle, L_obstacle, R_obstacle_dist, L_obstacle_dist, num_food, num_water)
-        print("FOOD:", num_food, "WATER:", num_water)
         
     def findTarget(self):
-        global next_t, time_init, blob_list, Target, Target_x, Target_color, pred_color, food_color, water_color, num_food, num_water
+        global next_t, time_init, blob_list, Target, Target_x, Target_color, food_color, water_color, num_food, num_water
 
         Target = False
         Target_color = ""
@@ -155,7 +152,7 @@ class StimuliDetector:
                 print(blob_list[i])
             # Detect the target
             Target_color = blob_list[i][1]
-            if Target_color == food_color or Target_color == water_color or Target_color == pred_color:
+            if Target_color == food_color or Target_color == water_color:
                 if Target == False:
                     Target_x = blob_list[i][2]
                     Target_size = blob_list[i][3]

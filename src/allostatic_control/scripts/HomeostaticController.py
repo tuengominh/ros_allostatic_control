@@ -11,7 +11,6 @@ temp_aV = 1.0
 hunger_urgency = 0.0
 thirst_urgency = 0.0
 temp_urgency = 0.0
-
 adsign = 0.0
 hsign = 0.0
 
@@ -23,9 +22,9 @@ class HomeostaticController:
         # ROS topics to publish to
         self.pub = rospy.Publisher("/allostasis/homeostasis/", HomeostaticState, queue_size=1)    
 
-    # Get graient information
+    # Get gradient information
     def tempCallback(self, rosdata):
-        global temp_aV, temp_urgency
+        global temp_aV, temp_urgency, adsign, hsign
         temp_aV = rosdata.temp_aV
         temp_urgency = rosdata.temp_urgency
         adsign = rosdata.adsign
@@ -34,7 +33,6 @@ class HomeostaticController:
     # Get resource information
     def resCallback(self, rosdata):
         global energy_aV, water_aV
-
         resource_type = rosdata.resource
         resource_impact = rosdata.impact
         energy_decay_factor = 0.00001 
@@ -57,15 +55,11 @@ class HomeostaticController:
         global energy_aV, water_aV, temp_aV, hunger_urgency, thirst_urgency, temp_urgency, adsign, hsign
 
         # Indicate desired values
-        energy_min_dV = 0.85
-        water_min_dV = 0.95
-
+        energy_min_dV = 0.9
+        water_min_dV = 0.9
         # Check homeostatic states and calculate intensities |aV - dV|
         hunger_urgency = self.checkBalance(energy_aV, energy_min_dV)
-        print("HUNGER:", "aV", energy_aV, "Urgency", hunger_urgency)
         thirst_urgency = self.checkBalance(water_aV, water_min_dV)
-        print("THIRST:", "aV", water_aV, "Urgency", thirst_urgency)
-        print("TEMPERATURE:", "aV", temp_aV, "Urgency", temp_urgency)
 
         self.publishMsg(energy_aV, water_aV, temp_aV, hunger_urgency, thirst_urgency, temp_urgency, adsign, hsign)
 

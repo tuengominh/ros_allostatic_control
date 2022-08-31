@@ -8,7 +8,6 @@ from allostatic_control.msg import TemperatureState
 temp_aV = 1.0
 temp_dV = 0.9 # values 0-1 will be inversely mapped to 50-27.5 Celsius degree, maximum desired value will be around 30 Celsius degree
 temp_urgency = 0.0
-
 adsign = 0.0
 hsign = 0.0
 
@@ -53,9 +52,8 @@ class TemperatureGradient:
 
     def calculateAVs(self):
         global temp_aV, temp_dV, temp_urgency, adsign, hsign
-
         temp_decay_factor = 0.00001
-        temp_impact = 0.1
+        temp_bonus = 0.1
 
         # 4 quadrants as local perception of the robot
         self.q0 = 0.0
@@ -72,23 +70,20 @@ class TemperatureGradient:
         self.q1 /= 12
         self.q2 /= 12
         self.q3 /= 12
-        print("Qs:", self.q0, self.q1, self.q2, self.q3)
 
         # aV as the mean of 4 quadrants
         temp_aV = (self.q0 + self.q1 + self.q2 + self.q3)/4
-
         # Bonus as the robot reaching around 35 Celsius degree
         if abs(temp_dV - temp_aV) < 0.3:
-            temp_aV = max(min(temp_aV + temp_impact - temp_decay_factor, 1.0), 0.1)
+            temp_aV = max(min(temp_aV + temp_bonus - temp_decay_factor, 1.0), 0.1)
         else:
             temp_aV = max(min(temp_aV - temp_decay_factor, 1.0), 0.1)
+            
         temp_urgency = max(min(abs(temp_dV - temp_aV), 1.0), 0.0) if temp_aV < temp_dV else 0
 
         # Calculate adsign and hsign values
         self.adSign()
         self.hSign()
-
-        print("aV", temp_aV, "U", temp_urgency, "adsign", adsign, "hsign", hsign)
         self.publishMsg(temp_aV, temp_urgency, adsign, hsign)  
 
     def adSign(self):
@@ -97,30 +92,21 @@ class TemperatureGradient:
 
     def hSign(self):
         global hsign
-
         if self.eco_z <= math.pi/8 and self.eco_z > (math.pi/8) * -1:
-            print("LEFT")
             hsign = np.sign(self.q0 - self.q2)
         elif self.eco_z >= math.pi/8 and self.eco_z < (math.pi/8) * 3:
-            print("DOWN-LEFT")
             hsign = np.sign((self.q0 + self.q2)/2) - ((self.q2 + self.q3)/2)
         elif self.eco_z >= (math.pi/8) * 3 and self.eco_z < (math.pi/8) * 5:
-            print("DOWN")
             hsign = np.sign(self.q2 - self.q3)
         elif self.eco_z >= (math.pi/8) * 5 and self.eco_z < (math.pi/8) * 7:
-            print("DOWN-RIGHT")
             hsign = np.sign((self.q2 + self.q3)/2) - ((self.q3 + self.q1)/2)
         elif self.eco_z >= (math.pi/8) * 7 or self.eco_z < (math.pi/8) * (-7):
-            print("RIGHT")
             hsign = np.sign(self.q3 - self.q1)
         elif self.eco_z >= (math.pi/8) * (-7) and self.eco_z < (math.pi/8) * (-5):
-            print("UP-RIGHT")
             hsign = np.sign((self.q3 + self.q1)/2) - ((self.q1 + self.q0)/2)
         elif self.eco_z >= (math.pi/8) * (-5) and self.eco_z < (math.pi/8) * (-3):
-            print("UP")
             hsign = np.sign(self.q1 - self.q0)
         elif self.eco_z >= (math.pi/8) * (-3) and self.eco_z < (math.pi/8) * (-1):
-            print("UP-LEFT")
             hsign = np.sign((self.q1 + self.q0)/2) - ((self.q0 + self.q2)/2)
 
     def publishMsg(self, temp_aV_msg, temp_urgency_msg, ad_msg, h_msg):
@@ -129,7 +115,6 @@ class TemperatureGradient:
         self.msg.temp_urgency = temp_urgency_msg 
         self.msg.adsign = ad_msg
         self.msg.hsign = h_msg
-
         # Publish to ROS topic
         self.pub.publish(self.msg)
 

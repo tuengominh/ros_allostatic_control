@@ -1,20 +1,18 @@
 #!/usr/bin/env python3
 import sys, time, random
 import rospy
-import csv
 from allostatic_control.msg import Drive
 from allostatic_control.msg import Blob
 from allostatic_control.msg import Action
 
-# Modify the path to the model folder in each machine
-sys.path.insert(1, "/home/usuario/Desktop/allostatic_ws/src/allostatic_control/scripts/behaviors")
+## Modify the path to the behavior folder in ypur machine
+sys.path.insert(1, "/home/usuario/ros_allostatic_control/src/allostatic_control/scripts/behaviors")
 from CatchTarget import *
 from RandomExplore import *
 from AvoidObstacle import *
 from SandDiving import *
 
 blob_catching = True
-
 hunger_drive = 0.0
 thirst_drive = 0.0
 temp_drive = 0.0
@@ -40,7 +38,7 @@ class ActionSelector:
         # ROS topics to publish to
         self.pub = rospy.Publisher("/allostasis/action/", Action, queue_size=1)
 
-    # Receive information about final force (drive) of all homeo systems
+    # Receive information about internal drives of all homeostatic systems
     def driveCallback(self, rosdata):
         global hunger_drive, thirst_drive, temp_drive, adsign, hsign
         hunger_drive = rosdata.hunger_drive
@@ -66,24 +64,18 @@ class ActionSelector:
             avoider = AvoidObstacle()
             x, th = avoider.avoid(R_obstacle_dist, L_obstacle_dist, R_obstacle, L_obstacle)
 
-        # Compare total force of all homeo systems and call relevant behavior
+        # Compare drives of all homeostatic systems and call relevant behavior
         elif Target == True and blob_catching == True:
             if Target_color == "green" and hunger_drive > 0.0 and hunger_drive >= thirst_drive and hunger_drive >= temp_drive:
-                print("CATCHING FOOD")
                 catcher = CatchTarget(Target_x)
                 x, th = catcher.catch(hunger_drive)
-
             elif Target_color == "blue" and thirst_drive > 0.0 and thirst_drive >= hunger_drive and thirst_drive >= temp_drive:
-                print("CATCHING WATER")
                 catcher = CatchTarget(Target_x)
                 x, th = catcher.catch(thirst_drive)
-
             # Only react if the drive is too high
-            elif temp_drive > 0.3 and temp_drive >= hunger_drive and temp_drive >= thirst_drive:
-                print("SAND DIVING")
+            elif temp_drive > 0.2 and temp_drive >= hunger_drive and temp_drive >= thirst_drive:
                 driver = SandDiving()
                 x, th = driver.dive(temp_drive, adsign, hsign)
-
             else:
                 explorer = RandomExplore()
                 x, th = explorer.explore()
