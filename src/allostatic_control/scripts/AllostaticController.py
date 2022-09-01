@@ -3,7 +3,6 @@ import sys, time
 import rospy
 import csv
 import numpy as np
-from scipy.signal import butter, lfilter
 from allostatic_control.msg import HomeostaticState
 from allostatic_control.msg import Blob
 from allostatic_control.msg import Drive
