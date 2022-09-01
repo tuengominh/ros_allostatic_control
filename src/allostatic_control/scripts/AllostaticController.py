@@ -61,6 +61,8 @@ class AllostaticController:
         num_food = rosdata.num_food
         num_water = rosdata.num_water
 
+        print("TARGET:", Target, Target_x, Target_color, num_food, num_water)
+
     # Update information from homeostatic systems
     def stateCallback(self, rosdata):
         global energy_aV, water_aV, temp_aV, hunger_urgency, thirst_urgency, temp_urgency, adsign, hsign, next_t, time_init
@@ -73,6 +75,7 @@ class AllostaticController:
         adsign = rosdata.adsign
         hsign = rosdata.hsign
         
+        print("ENERGY:", energy_aV, "WATER:", water_aV, "TEMP:", temp_aV)
         self.allostaticMechanism()
 
     def allostaticMechanism(self):
@@ -100,6 +103,10 @@ class AllostaticController:
         hunger_drive = hunger_urgency * hunger_k 
         thirst_drive = thirst_urgency * thirst_k 
         temp_drive = temp_urgency * temp_k 
+
+        print("HUNGER:", "k:", hunger_k, "AL:", hunger_allo_load, "Drive:", hunger_drive)
+        print("THIRST:", "k:", thirst_k, "AL:", thirst_allo_load, "Drive:", thirst_drive)
+        print("TEMP:", "k:", temp_k, "AL:", temp_allo_load, "Drive:", temp_drive)
         self.publishMsg(hunger_drive, thirst_drive, temp_drive, adsign, hsign)
 
         # Log homeostatic and allostatic data
