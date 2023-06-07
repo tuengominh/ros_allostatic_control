@@ -35,6 +35,7 @@ class ActionSelector:
         # Subscribe to ROS topics
         self.sub = rospy.Subscriber("/allostasis/drive/", Drive, self.driveCallback, queue_size=1)
         self.sub1 = rospy.Subscriber("/allostasis/perception/", Blob, self.blobCallback, queue_size=1)
+
         # ROS topics to publish to
         self.pub = rospy.Publisher("/allostasis/action/", Action, queue_size=1)
 
@@ -69,13 +70,16 @@ class ActionSelector:
             if Target_color == "green" and hunger_drive > 0.0 and hunger_drive >= thirst_drive and hunger_drive >= temp_drive:
                 catcher = CatchTarget(Target_x)
                 x, th = catcher.catch(hunger_drive)
+
             elif Target_color == "blue" and thirst_drive > 0.0 and thirst_drive >= hunger_drive and thirst_drive >= temp_drive:
                 catcher = CatchTarget(Target_x)
                 x, th = catcher.catch(thirst_drive)
-            # Only react if the drive is too high
+
+            # Only react if the temp. drive is too high
             elif temp_drive > 0.2 and temp_drive >= hunger_drive and temp_drive >= thirst_drive:
                 driver = SandDiving()
                 x, th = driver.dive(temp_drive, adsign, hsign)
+
             else:
                 explorer = RandomExplore()
                 x, th = explorer.explore()

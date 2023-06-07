@@ -7,7 +7,7 @@ from allostatic_control.msg import TemperatureState
 
 temp_aV = 1.0
 temp_dV = 0.9 # values 0-1 will be inversely mapped to 50-27.5 Celsius degree, maximum desired value will be around 30 Celsius degree
-temp_urgency = 0.0
+temp_err = 0.0
 adsign = 0.0
 hsign = 0.0
 
@@ -51,7 +51,7 @@ class TemperatureGradient:
         self.gradient = self.gradient.reshape(220, 220)
 
     def calculateAVs(self):
-        global temp_aV, temp_dV, temp_urgency, adsign, hsign
+        global temp_aV, temp_dV, temp_err, adsign, hsign
         temp_decay_factor = 0.00001
         temp_bonus = 0.1
 
@@ -73,18 +73,19 @@ class TemperatureGradient:
 
         # aV as the mean of 4 quadrants
         temp_aV = (self.q0 + self.q1 + self.q2 + self.q3)/4
+        
         # Bonus as the robot reaching around 35 Celsius degree
         if abs(temp_dV - temp_aV) < 0.3:
             temp_aV = max(min(temp_aV + temp_bonus - temp_decay_factor, 1.0), 0.1)
         else:
             temp_aV = max(min(temp_aV - temp_decay_factor, 1.0), 0.1)
             
-        temp_urgency = max(min(abs(temp_dV - temp_aV), 1.0), 0.0) if temp_aV < temp_dV else 0
+        temp_err = max(min(abs(temp_dV - temp_aV), 1.0), 0.0) if temp_aV < temp_dV else 0
 
         # Calculate adsign and hsign values
         self.adSign()
         self.hSign()
-        self.publishMsg(temp_aV, temp_urgency, adsign, hsign)  
+        self.publishMsg(temp_aV, temp_err, adsign, hsign)  
 
     def adSign(self):
         global adsign, temp_dV, temp_aV
@@ -109,10 +110,10 @@ class TemperatureGradient:
         elif self.eco_z >= (math.pi/8) * (-3) and self.eco_z < (math.pi/8) * (-1):
             hsign = np.sign((self.q1 + self.q0)/2) - ((self.q0 + self.q2)/2)
 
-    def publishMsg(self, temp_aV_msg, temp_urgency_msg, ad_msg, h_msg):
+    def publishMsg(self, temp_aV_msg, temp_err_msg, ad_msg, h_msg):
         self.msg = TemperatureState()
         self.msg.temp_aV = temp_aV_msg
-        self.msg.temp_urgency = temp_urgency_msg 
+        self.msg.temp_err = temp_err_msg 
         self.msg.adsign = ad_msg
         self.msg.hsign = h_msg
         # Publish to ROS topic

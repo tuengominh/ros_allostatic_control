@@ -8,9 +8,9 @@ from allostatic_control.msg import TemperatureState
 energy_aV = 1.0
 water_aV = 1.0
 temp_aV = 1.0
-hunger_urgency = 0.0
-thirst_urgency = 0.0
-temp_urgency = 0.0
+hunger_err = 0.0
+thirst_err = 0.0
+temp_err = 0.0
 adsign = 0.0
 hsign = 0.0
 
@@ -24,9 +24,9 @@ class HomeostaticController:
 
     # Get gradient information
     def tempCallback(self, rosdata):
-        global temp_aV, temp_urgency, adsign, hsign
+        global temp_aV, temp_err, adsign, hsign
         temp_aV = rosdata.temp_aV
-        temp_urgency = rosdata.temp_urgency
+        temp_err = rosdata.temp_err
         adsign = rosdata.adsign
         hsign = rosdata.hsign
 
@@ -38,7 +38,7 @@ class HomeostaticController:
         energy_decay_factor = 0.00001 
         water_decay_factor = 0.00002
 
-        # Update aVs
+        # Update aVs (process variables in PID control)
         if resource_type == "Food": 
             energy_aV = max(min(energy_aV + resource_impact - energy_decay_factor, 1.0), 0.1)
             water_aV = max(min(water_aV - water_decay_factor, 1.0), 0.1)
@@ -52,29 +52,30 @@ class HomeostaticController:
         self.homestaticMechanism()
         
     def homestaticMechanism(self):
-        global energy_aV, water_aV, temp_aV, hunger_urgency, thirst_urgency, temp_urgency, adsign, hsign
+        global energy_aV, water_aV, temp_aV, hunger_err, thirst_err, temp_err, adsign, hsign
 
-        # Indicate desired values
+        # Indicate desired values (set points in PID control)
         energy_min_dV = 0.9
         water_min_dV = 0.9
-        # Check homeostatic states and calculate intensities |aV - dV|
-        hunger_urgency = self.checkBalance(energy_aV, energy_min_dV)
-        thirst_urgency = self.checkBalance(water_aV, water_min_dV)
 
-        self.publishMsg(energy_aV, water_aV, temp_aV, hunger_urgency, thirst_urgency, temp_urgency, adsign, hsign)
+        # Check homeostatic states and calculate absolute errors |aV - dV|
+        hunger_err = self.checkBalance(energy_aV, energy_min_dV)
+        thirst_err = self.checkBalance(water_aV, water_min_dV)
+
+        self.publishMsg(energy_aV, water_aV, temp_aV, hunger_err, thirst_err, temp_err, adsign, hsign)
 
     def checkBalance(self, aV, min_dV):
-        urgency = abs(min_dV - aV) if aV < min_dV else 0.0
-        return urgency
+        err = abs(min_dV - aV) if aV < min_dV else 0.0
+        return err
 
-    def publishMsg(self, energy_aV_msg, water_aV_msg, temp_aV_msg, hunger_urgency_msg, thirst_urgency_msg, temp_urgency_msg, ad_msg, h_msg):
+    def publishMsg(self, energy_aV_msg, water_aV_msg, temp_aV_msg, hunger_err_msg, thirst_err_msg, temp_err_msg, ad_msg, h_msg):
         self.msg = HomeostaticState()
         self.msg.energy_aV = energy_aV_msg
         self.msg.water_aV = water_aV_msg
         self.msg.temp_aV = temp_aV_msg
-        self.msg.hunger_urgency = hunger_urgency_msg 
-        self.msg.thirst_urgency = thirst_urgency_msg
-        self.msg.temp_urgency = temp_urgency_msg
+        self.msg.hunger_err = hunger_err_msg 
+        self.msg.thirst_err = thirst_err_msg
+        self.msg.temp_err = temp_err_msg
         self.msg.adsign = ad_msg
         self.msg.hsign = h_msg
         # Publish to ROS topic
